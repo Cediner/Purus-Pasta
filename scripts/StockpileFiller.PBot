@@ -43,7 +43,7 @@ const startBtn = () => {
 					break;
 				}
 				PBotUtils.pfRightClick(stockpiles[0], 0);
-				PBotWindowAPI.waitForWindow("Stockpile");
+				PBotWindowAPI.waitForWindow("Stockpile", 1000000);
 				const capacity = PBotWindowAPI.getStockpileTotalCapacity();
 				const used = PBotWindowAPI.getStockpileUsedCapacity();
 				const count = Math.min(capacity-used, itmInInv);

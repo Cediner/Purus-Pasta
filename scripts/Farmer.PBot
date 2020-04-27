@@ -102,7 +102,7 @@ startFarmingBtn = () => {
 		} while(seeds.length === 0);
 		// Take a seed into hand
 		statusLbl.setText("Taking seed into hand");
-		seeds[0].takeItem();
+		seeds[0].takeItem(true);
 		if(shouldStop()) return;
 		// Plant the seed
 		statusLbl.setText("Planting the seed");

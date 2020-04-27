@@ -62,7 +62,7 @@ main = () => {
 					PBotUtils.sleep(25);
 				piles[0].doClick(3, 0);
 			}
-			PBotWindowAPI.waitForWindow("Stockpile");
+			PBotWindowAPI.waitForWindow("Stockpile", 100000000);
 			const free = PBotWindowAPI.getStockpileTotalCapacity()-PBotWindowAPI.getStockpileUsedCapacity();
 			if(free === 0) {
 				piles.shift();

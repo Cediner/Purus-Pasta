@@ -33,10 +33,7 @@ main = () => {
 	while(stockpileLocs.length > 0 && items.length > 0) {
 		const location = stockpileLocs.shift();
 		const item = items.shift();
-		item.takeItem();
-		console.log(PBotUtils.getItemAtHand());
-		while(PBotUtils.getItemAtHand() == null)
-			PBotUtils.sleep(15);
+		item.takeItem(true);
 		PBotGobAPI.makePile();
 		while(PBotUtils.getItemAtHand() != null)
 			PBotUtils.sleep(15);
