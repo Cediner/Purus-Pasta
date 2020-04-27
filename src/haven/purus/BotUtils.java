@@ -1,14 +1,14 @@
 package haven.purus;
 
-import static haven.OCache.posres;
+import haven.*;
+import haven.FlowerMenu.Petal;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import haven.*;
-import haven.FlowerMenu.Petal;
+import static haven.OCache.posres;
 
 public class BotUtils {
 
@@ -116,27 +116,30 @@ public class BotUtils {
 	// Drinks liquids from containers in inventory
 	public static void drink() {
 		GameUI gui = HavenPanel.lui.root.findchild(GameUI.class);
-		WItem item = findDrink(playerInventory());
+		IMeter.Meter stam = gui.getmeter("stam", 0);
+		WItem item = null;
+		do {
+			item = findDrink(playerInventory());
 
-		if (item != null) {
-			item.item.wdgmsg("iact", Coord.z, 3);
-			while(gui.ui.root.findchild(FlowerMenu.class) == null)
-				sleep(10);
-			@SuppressWarnings("deprecation")
-			FlowerMenu menu = gui.ui.root.findchild(FlowerMenu.class);
-			if (menu != null) {
-				for (FlowerMenu.Petal opt : menu.opts) {
-					if (opt.name.equals("Drink")) {
-						menu.choose(opt);
-						menu.destroy();
-						sleep(500);
-						while (gui.prog >= 0) {
-							sleep(100);
+			if(item != null) {
+				item.item.wdgmsg("iact", Coord.z, 3);
+				while(gui.ui.root.findchild(FlowerMenu.class) == null)
+					sleep(10);
+				@SuppressWarnings("deprecation") FlowerMenu menu = gui.ui.root.findchild(FlowerMenu.class);
+				if(menu != null) {
+					for(FlowerMenu.Petal opt : menu.opts) {
+						if(opt.name.equals("Drink")) {
+							menu.choose(opt);
+							menu.destroy();
+							sleep(500);
+							while(gui.prog >= 0) {
+								sleep(100);
+							}
 						}
 					}
 				}
 			}
-		}
+		} while(item != null && stam.a <= 80);
 	}
 
 	// Finds an item from inventory that contains liquids that can be consumed
@@ -254,7 +257,7 @@ public class BotUtils {
 
 	// Use item in hand to ground below player, for example, plant carrot
 	public static void mapInteractClick(int mod) {
-		gui.map.wdgmsg("itemact", getCenterScreenCoord(), player().rc.floor(posres), 3, gui.ui.modflags());
+		gui.map.wdgmsg("itemact", getCenterScreenCoord(), player().rc.floor(posres), mod);
 	}
 
 	// Destroys the given gob

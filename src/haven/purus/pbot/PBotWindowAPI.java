@@ -26,6 +26,19 @@ public class PBotWindowAPI {
 	}
 
 	/**
+	 * Wait for a window with a specific name to appear
+	 * @param windowName Name of the window
+	 * @return Returns the window or null if not found
+	 */
+	public static Window waitForWindow(String windowName) {
+		Window window;
+		while((window = PBotAPI.gui.getwnd(windowName)) == null) {
+			PBotUtils.sleep(25);
+		}
+		return window;
+	}
+
+	/**
 	 * Wait for a window with a specific name to disappear
 	 * @param timeout in milliseconds
 	 * @param windowName Name of the window
@@ -157,6 +170,21 @@ public class PBotWindowAPI {
 			amounts.add(vm.amount);
 		}
 		return amounts;
+	}
+
+	/**
+	 * Get tooltips of widgets in the window Example: Trough
+	 * @param window Window to check for tooltips
+	 * @return List containing the tooltips that were found
+	 */
+	public static ArrayList<String> getTooltips(Window window) {
+		ArrayList<String> tooltips = new ArrayList<>();
+		for(Widget w = window.child; w != null; w = w.next) {
+			if(w.tooltip instanceof Text) {
+				tooltips.add(((Text) w.tooltip).text);
+			}
+		}
+		return tooltips;
 	}
 
 	/**

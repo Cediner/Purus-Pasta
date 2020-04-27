@@ -41,9 +41,9 @@ public class PBotItem {
 	 * @param wait Wait for item to appear on hand
 	 */
 	public void takeItem(boolean wait) {
-		gitem.wdgmsg("take", Coord.z);
+		gitem.wdgmsg("take", getInvLoc());
 		if(wait) {
-			while(PBotUtils.getItemAtHand() != null) {
+			while(PBotUtils.getItemAtHand() == null) {
 				PBotUtils.sleep(25);
 			}
 		}
@@ -87,6 +87,14 @@ public class PBotItem {
 	}
 
 	/**
+	 * Get location of the item in inventory, ie. 5,4
+	 * @return Coord-object, access x and y for coords
+	 */
+	public Coord getInvLoc() {
+		return witem.c.div(33);
+	}
+
+	/**
 	 * Returns name of the item if it exists
 	 * @return Name of item or null
 	 */
@@ -126,6 +134,16 @@ public class PBotItem {
 			return -1;
 		else
 			return buff.q;
+	}
+
+	/**
+	 * Returns quality of the item, wait until the quality is calculated for the item
+	 * @return Quality of the item
+	 */
+	public double getQuality2() {
+		while(gitem.quality == null)
+			PBotUtils.sleep(5);
+		return gitem.quality.q;
 	}
 
 	/**

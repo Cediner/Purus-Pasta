@@ -1,6 +1,9 @@
 package haven.purus.pbot;
 
-import haven.*;
+import haven.Coord;
+import haven.Inventory;
+import haven.WItem;
+import haven.Widget;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,6 +46,8 @@ public class PBotInventory {
 		List<Pattern> patterns = Arrays.stream(pattern).map(Pattern::compile).collect(Collectors.toList());
 		for(PBotItem item : getInventoryContents()) {
 			String name = item.getName();
+			if(name == null)
+				continue;
 			for(Pattern p : patterns) {
 				if(p.matcher(name).matches())
 					items.add(item);

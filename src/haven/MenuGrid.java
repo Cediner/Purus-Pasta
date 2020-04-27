@@ -26,40 +26,16 @@
 
 package haven;
 
-import java.awt.Color;
+import haven.Resource.AButton;
+import haven.automation.*;
+import haven.purus.*;
+
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.font.TextAttribute;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.WeakHashMap;
-
-import haven.Resource.AButton;
-import haven.automation.AddBranchesToOven;
-import haven.automation.AddCoalToSmelter;
-import haven.automation.ButcherFish;
-import haven.automation.Dismount;
-import haven.automation.DreamHarvester;
-import haven.automation.EquipWeapon;
-import haven.automation.FeedClover;
-import haven.automation.FillCheeseTray;
-import haven.automation.GobSelectCallback;
-import haven.automation.LeashAnimal;
-import haven.automation.LightWithTorch;
-import haven.automation.Shoo;
-import haven.automation.SteelRefueler;
-import haven.automation.TrellisDestroy;
-import haven.automation.TrellisHarvest;
-import haven.purus.*;
+import java.util.*;
 
 public class MenuGrid extends Widget implements KeyBinding.Bindable {
     public final static Coord bgsz = Inventory.invsq.sz().add(-1, -1);
@@ -323,7 +299,8 @@ public class MenuGrid extends Widget implements KeyBinding.Bindable {
             p.add(paginafor(Resource.local().load("paginae/amber/dismount")));
             // Purus Pasta
             p.add(paginafor(Resource.local().load("paginae/purus/farmer")));
-            p.add(paginafor(Resource.local().load("paginae/purus/troughfill")));
+			p.add(paginafor(Resource.local().load("paginae/purus/farmer2")));
+			p.add(paginafor(Resource.local().load("paginae/purus/troughfill")));
             p.add(paginafor(Resource.local().load("paginae/purus/study")));
             p.add(paginafor(Resource.local().load("paginae/purus/barrelfill")));
             p.add(paginafor(Resource.local().load("paginae/purus/stockpilefill")));
@@ -540,6 +517,13 @@ public class MenuGrid extends Widget implements KeyBinding.Bindable {
             synchronized (GobSelectCallback.class) {
                 gameui().map.registerAreaSelect(f);
             }
+		} else if(ad[1].equals("farmbot2")) {
+			Farmer2 f = new Farmer2();
+			Window w = f;
+			gui.add(w, new Coord(gui.sz.x/2 - w.sz.x/2, gui.sz.y/2 - w.sz.y/2 - 200));
+			synchronized (GobSelectCallback.class) {
+				gameui().map.registerAreaSelect(f);
+			}
         } else if(ad[1].equals("troughfill")) {
         	TroughFiller tf = new TroughFiller();
         	gui.add(tf, new Coord(gui.sz.x / 2 - tf.sz.x / 2, gui.sz.y / 2 - tf.sz.y / 2 - 200));
