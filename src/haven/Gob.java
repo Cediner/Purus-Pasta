@@ -68,11 +68,11 @@ public class Gob implements Sprite.Owner, Skeleton.ModOwner, Rendered {
 	private static final Material.Colors ttDone = new Material.Colors(new Color(87, 204, 73, 255));
     private static final Material.Colors potDone = new Material.Colors(new Color(0, 0, 0, 255));
     private static final Gob.Overlay animalradius = new Gob.Overlay(new BPRadSprite(100.0F, -10.0F, BPRadSprite.smatDanger));
-    private static final Map<Gob, Gob.Overlay> playerhighlight = new HashMap<Gob, Gob.Overlay>();
     public Boolean knocked = null;  // knocked will be null if pose update request hasn't been received yet
     public Type type = null;
+    private Overlay ploverlay;
 
-    public enum Type {
+	public enum Type {
         OTHER(0), DFRAME(1), TREE(2), BUSH(3), BOULDER(4), PLAYER(5), SIEGE_MACHINE(6), MAMMOTH(7), OLDTRUNK(9), GARDENPOT(10), MUSSEL(11), LOC_RESOURCE(12), FU_YE_CURIO(13), SEAL(14), EAGLE(15),
         PLANT(16), MULTISTAGE_PLANT(17), PLANT_FALLOW(18),
         MOB(32), WOLF(33), BEAR(34), LYNX(35), WILDGOAT(36), TROLL(38), WALRUS(39), BAT(40), CAVERAT(41),
@@ -743,12 +743,11 @@ public class Gob implements Sprite.Owner, Skeleton.ModOwner, Rendered {
         KinInfo ki = getattr(KinInfo.class);
         if (ki != null) {
             rl.add(ki.fx, null);
-            if(!playerhighlight.containsKey(this)) {
+			if(ploverlay == null) {
             	Resource res = getres();
             	if (res != null && res.name.contains("body") && !isplayer()) {
-		            Overlay overlay = new Gob.Overlay(new PartyMemberOutline(this, BuddyWnd.gc[ki.group]));
-		            ols.add(overlay);
-		            playerhighlight.put(this, overlay);
+            		ploverlay = new Gob.Overlay(new PartyMemberOutline(this, BuddyWnd.gc[ki.group]));
+		            ols.add(ploverlay);
             	}
             }
         }
