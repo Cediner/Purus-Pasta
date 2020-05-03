@@ -26,17 +26,8 @@
 
 package haven;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import javax.media.opengl.GL2;
+import java.util.*;
 
 public class Skeleton {
     public final Map<String, Bone> bones = new HashMap<String, Bone>();
@@ -519,7 +510,7 @@ public class Skeleton {
                 for(ResPose p : res.layers(ResPose.class)) {
                     if((p.id < 0) || ((mask & (1 << p.id)) != 0)) {
 						CheckListboxItem itm = Config.disableanim.get("/idle");
-						if(itm != null && itm.selected && res.name.contains("idle") && !res.name.startsWith("borke"))
+						if(itm != null && itm.selected && res.name.contains("idle") && !res.name.startsWith("gfx/borka"))
 							continue;
 						poses.add(p.forskel(owner, skel, p.defmode));
 					}
