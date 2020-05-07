@@ -22,7 +22,7 @@ for(let gob of gobs) {
 		continue;
 	}
 	PBotUtils.waitForFlowerMenu();
-	if(PBotUtils.choosePetal("Skin")) {
+	if(PBotUtils.choosePetal("Skin") || PBotUtils.choosePetal("Scale")) {
 		PBotUtils.waitForHourglass();
 	}
 	PBotUtils.dropItemFromHand(0);
@@ -42,6 +42,9 @@ for(let gob of gobs) {
 	PBotUtils.waitForFlowerMenu();
 	if(PBotUtils.choosePetal("Collect bones")) {
 		PBotUtils.waitFlowermenuClose();
+		while(PBotGobAPI.findGobById(gob.getGobId()) != null) {
+			PBotUtils.sleep(5);
+		}
 	}
 	PBotUtils.dropItemFromHand(0);
 	butchered_animals++;
