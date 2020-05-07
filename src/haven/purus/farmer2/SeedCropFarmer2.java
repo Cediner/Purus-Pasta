@@ -125,6 +125,8 @@ public class SeedCropFarmer2 extends Window implements Runnable {
 
 			for(Gob g : Gobs("gfx/terobjs/trough")) {
 				BotUtils.pfGobClick(g, 3,0);
+				while(PBotWindowAPI.getTooltips(PBotWindowAPI.waitForWindow("Trough")).size() == 0)
+					PBotUtils.sleep(15);
 				String tooltip = PBotWindowAPI.getTooltips(PBotWindowAPI.waitForWindow("Trough")).get(0);
 				int remainingCapacity = 2000-(int)Math.floor(Float.parseFloat(tooltip.split(" ")[1].split("/")[0]));
 				troughs.add(new GobCapacity(g, remainingCapacity));
@@ -196,6 +198,10 @@ public class SeedCropFarmer2 extends Window implements Runnable {
 							}
 							PBotUtils.playerInventory().getItemFromInventoryAtLocation(invCarrots.get(invCarrots.size()-1).c.x, invCarrots.get(invCarrots.size()-1).c.y).takeItem(false);
 							PBotWindowAPI.getInventories(PBotWindowAPI.waitForWindow("Chest", 1000000)).get(0).dropItemToInventory(chestCarrots.last().c);
+							QualityItemGob qig = chestCarrots.last();
+							chestCarrots.remove(chestCarrots.last());
+							qig.quality = invCarrots.get(invCarrots.size()-1).quality;
+							chestCarrots.add(qig);
 							PBotUtils.playerInventory().dropItemToInventory(invCarrots.get(invCarrots.size()-1).c);
 							if(stopThread)
 								return;
