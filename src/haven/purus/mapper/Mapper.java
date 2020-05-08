@@ -7,8 +7,11 @@ import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import java.net.*;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.concurrent.Executors;
@@ -93,6 +96,38 @@ public class Mapper {
 			}
 		}
 		sendMaptile(grid.id, maptile);
+	}
+
+	public static void sendMarkerData(long gridId, int ofsX, int ofsY, String resname, String name) {
+		Runnable run = new Runnable() {
+			@Override
+			public void run() {
+				try {
+					JSONArray arr = new JSONArray();
+					JSONObject obj = new JSONObject();
+					obj.put("gridId", gridId);
+					obj.put("ofsX", ofsX);
+					obj.put("ofsY", ofsY);
+
+					obj.put("res", resname);
+					obj.put("name", name);
+					arr.put(obj);
+
+
+					HttpURLConnection conn = (HttpURLConnection) new URL(new URL(apiURL), "waypoints/client/markers").openConnection();
+					conn.setRequestMethod("POST");
+					conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
+					conn.setDoOutput(true);
+					DataOutputStream dos = new DataOutputStream(conn.getOutputStream());
+					dos.write(arr.toString().getBytes(StandardCharsets.UTF_8));
+					dos.close();
+					conn.getResponseCode();
+				} catch(IOException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		executor.schedule(run, 0, TimeUnit.SECONDS);
 	}
 
 	public static void sendMarkerData(MapFile mapFile) {

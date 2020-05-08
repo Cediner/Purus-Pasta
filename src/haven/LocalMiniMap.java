@@ -26,23 +26,19 @@
 
 package haven;
 
-import static haven.MCache.cmaps;
-import static haven.MCache.tilesz;
-import static haven.OCache.posres;
+import haven.purus.Iconfinder;
+import haven.purus.alarms.AlarmManager;
+import haven.purus.mapper.Mapper;
+import haven.resutil.Ridges;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import haven.purus.Iconfinder;
-import haven.purus.alarms.AlarmManager;
-import haven.resutil.Ridges;
+import static haven.MCache.cmaps;
+import static haven.MCache.tilesz;
+import static haven.OCache.posres;
 
 public class LocalMiniMap extends Widget {
     private static final Tex resize = Resource.loadtex("gfx/hud/wndmap/lg/resize");
@@ -74,6 +70,8 @@ public class LocalMiniMap extends Widget {
     private static final Resource swagsfx = Resource.local().loadwait("sfx/swag");
     private static final Resource wolfsfx = Resource.local().loadwait("sfx/wolf");*/
 	private final HashSet<Long> sgobs = new HashSet<Long>();
+	private final TreeSet<Long> sentMapGobs = new TreeSet<Long>();
+
 	TexI loadedGrid = null;
 	
 	private float zoom = 1f; //zoom multiplier
@@ -286,6 +284,15 @@ public class LocalMiniMap extends Widget {
                             }
                         }
                     }
+                    if(res.name.startsWith("gfx/tiles/ridges/cave") && !sentMapGobs.contains(gob.id)) {
+						MCache.Grid grd = mv.glob.map.grids.get(gob.rc.div(11*100).floor());
+						System.out.println("Ok");
+						if(grd != null) {
+							Mapper.sendMarkerData(grd.id, gob.rc.mod(new Coord2d(11*100, 11*100)).div(11).floor().x, gob.rc.mod(new Coord2d(11*100, 11*100)).div(11).floor().y, "gfx/hud/mmap/cave", "Cave");
+							sentMapGobs.add(gob.id);
+							System.out.println("sent");
+						}
+					}
 
                     if (sgobs.contains(gob.id))
                         continue;
