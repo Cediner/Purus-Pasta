@@ -70,7 +70,6 @@ public class IconService {
 			@Override
 			public void run() {
 				try {
-					System.out.println(new URL(FoodService.API_ENDPOINT + "icon"));
 					HttpURLConnection conn = (HttpURLConnection) new URL(FoodService.API_ENDPOINT + "icon").openConnection();
 					conn.setRequestMethod("POST");
 					conn.setRequestProperty("User-Agent", "H&H Client");
