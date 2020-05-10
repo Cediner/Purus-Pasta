@@ -286,11 +286,9 @@ public class LocalMiniMap extends Widget {
                     }
                     if(res.name.startsWith("gfx/tiles/ridges/cave") && !sentMapGobs.contains(gob.id)) {
 						MCache.Grid grd = mv.glob.map.grids.get(gob.rc.div(11*100).floor());
-						System.out.println("Ok");
-						if(grd != null) {
+						if(grd != null && Config.pastaMapper) {
 							Mapper.sendMarkerData(grd.id, gob.rc.mod(new Coord2d(11*100, 11*100)).div(11).floor().x, gob.rc.mod(new Coord2d(11*100, 11*100)).div(11).floor().y, "gfx/hud/mmap/cave", "Cave");
 							sentMapGobs.add(gob.id);
-							System.out.println("sent");
 						}
 					}
 
