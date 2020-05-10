@@ -7,7 +7,6 @@ import haven.resutil.FoodInfo;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -24,13 +23,13 @@ import java.util.*;
 import java.util.concurrent.*;
 
 public class FoodService {
-    private static final String API_ENDPOINT = "https://vatsul.com/foodproxy/food-api/";
-    private static final String FOOD_DATA_URL = "https://vatsul.com/foodproxy/food-info/data/food-info.json";
+   	public static final String API_ENDPOINT = "http://hnhfood.vatsul.com/api/";
+   	private static final String FOOD_DATA_URL = "http://hnhfood.vatsul.com/api/data/food-info.json";
     private static final File FOOD_DATA_CACHE_FILE = new File("food_data.json");
 
     private static final Map<String, ParsedFoodInfo> cachedItems = new ConcurrentHashMap<>();
     private static final Queue<HashedFoodInfo> sendQueue = new ConcurrentLinkedQueue<>();
-    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
+    public static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
 
     static {
         if (!Resource.language.equals("en")) {
@@ -68,7 +67,7 @@ public class FoodService {
             }
             if (System.currentTimeMillis() - lastModified > TimeUnit.MINUTES.toMillis(30)) {
                 try {
-                    HttpsURLConnection connection = (HttpsURLConnection) new URL(FOOD_DATA_URL).openConnection();
+                    HttpURLConnection connection = (HttpURLConnection) new URL(FOOD_DATA_URL).openConnection();
 					connection.setRequestProperty("User-Agent", "H&H Client");
                     connection.setRequestProperty("Cache-Control", "no-cache");
                     StringBuilder stringBuilder = new StringBuilder();
@@ -77,8 +76,9 @@ public class FoodService {
                     } finally {
                         connection.disconnect();
                     }
-                    String content = stringBuilder.toString();
-                    Files.write(FOOD_DATA_CACHE_FILE.toPath(), Collections.singleton(content), StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
+					String content = stringBuilder.toString();
+
+					Files.write(FOOD_DATA_CACHE_FILE.toPath(), Collections.singleton(content), StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
                     JSONObject object = new JSONObject(content);
                     object.keySet().forEach(key -> cachedItems.put(key, new ParsedFoodInfo()));
                     System.out.println("Updated food data file: " + cachedItems.size() + " entries");
@@ -132,7 +132,11 @@ public class FoodService {
                         String name = (String) info.getClass().getField("name").get(info);
                         Double value = (Double) info.getClass().getField("val").get(info);
                         parsedFoodInfo.ingredients.add(new FoodIngredient(name, (int) (value * 100)));
-                    }
+                    } else if(info.getClass().getName().equals("Smoke")) {
+						String name = (String) info.getClass().getField("name").get(info);
+						Double value = (Double) info.getClass().getField("val").get(info);
+						parsedFoodInfo.ingredients.add(new FoodIngredient(name, (int) (value * 100)));
+					}
                 }
 
                 checkAndSend(parsedFoodInfo);
@@ -171,8 +175,8 @@ public class FoodService {
 
         if (!toSend.isEmpty()) {
             try {
-                HttpsURLConnection connection =
-                        (HttpsURLConnection) new URL(API_ENDPOINT + "/food").openConnection();
+                HttpURLConnection connection =
+                        (HttpURLConnection) new URL(API_ENDPOINT + "food").openConnection();
 				connection.setRequestMethod("POST");
                 connection.setRequestProperty("Content-Type", "application/json");
 				connection.setRequestProperty("User-Agent", "H&H Client");

@@ -28,6 +28,7 @@ package haven;
 
 import haven.res.ui.tt.q.qbuff.QBuff;
 import integrations.food.FoodService;
+import integrations.food.IconService;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -180,6 +181,7 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
                     dropItMaybe();
                     postProcessed = true;
                 }
+                IconService.checkIcon(info(), spr);
             } catch (Loading l) {
             }
         }
