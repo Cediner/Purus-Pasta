@@ -59,8 +59,8 @@ public class Mapper {
 			};
 
 	static {
+		executor = Executors.newScheduledThreadPool(1);
 		if(Config.pastaMapper) {
-			executor = Executors.newScheduledThreadPool(1);
 			if(Config.pastaMapper)
 				executor.scheduleWithFixedDelay(locUpd, 5, 5, TimeUnit.SECONDS);
 		}
