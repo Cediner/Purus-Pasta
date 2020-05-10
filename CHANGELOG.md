@@ -1,5 +1,8 @@
 ## Changelog
 
+### 3.21.0
+    - Updated to use Pasta food api
+    - Minor fixes
 ### 3.20.0
     - Added status colors to tanning tubs
     - Added butcher script
