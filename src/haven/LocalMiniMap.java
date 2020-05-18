@@ -141,21 +141,23 @@ public class LocalMiniMap extends Widget {
         Coord c = new Coord();
         for (c.y = 0; c.y < sz.y; c.y++) {
             for (c.x = 0; c.x < sz.x; c.x++) {
-                int t = m.gettile(ul.add(c));
+                int t = Config.minimapsmooth ? m.gettilenosnow(ul.add(c)) : m.gettile(ul.add(c));
                 BufferedImage tex = tileimg(t, texes);
                 int rgb = 0;
                 if (tex != null)
                     rgb = tex.getRGB(Utils.floormod(c.x + ul.x, tex.getWidth()),
                             Utils.floormod(c.y + ul.y, tex.getHeight()));
                 buf.setRGB(c.x, c.y, rgb);
-
-                try {
-                    if ((m.gettile(ul.add(c).add(-1, 0)) > t) ||
-                            (m.gettile(ul.add(c).add(1, 0)) > t) ||
-                            (m.gettile(ul.add(c).add(0, -1)) > t) ||
-                            (m.gettile(ul.add(c).add(0, 1)) > t))
-                        buf.setRGB(c.x, c.y, Color.BLACK.getRGB());
-                } catch (Exception e) {
+                if (!Config.minimapsmooth) {
+                    try {
+                        if ((m.gettile(ul.add(c).add(-1, 0)) > t) ||
+                                (m.gettile(ul.add(c).add(1, 0)) > t) ||
+                                (m.gettile(ul.add(c).add(0, -1)) > t) ||
+                                (m.gettile(ul.add(c).add(0, 1)) > t)) {
+                            buf.setRGB(c.x, c.y, Color.BLACK.getRGB());
+                        }
+                    } catch (Exception e) {
+                    }
                 }
             }
         }
@@ -307,22 +309,22 @@ public class LocalMiniMap extends Widget {
                         Audio.play(swagsfx, Config.alarmlocresvol);
                     } else if (gob.type == Gob.Type.BEAR && gob.knocked == Boolean.FALSE) {
                         sgobs.add(gob.id);
-                        Audio.play(bearsfx, 0.7);
+                        Audio.play(bearsfx, 0.6);
                     } else if (gob.type == Gob.Type.LYNX && gob.knocked == Boolean.FALSE) {
                         sgobs.add(gob.id);
-                        Audio.play(lynxfx, 0.8);
+                        Audio.play(lynxfx, 0.7);
                     } else if (gob.type == Gob.Type.WALRUS && gob.knocked == Boolean.FALSE) {
                         sgobs.add(gob.id);
-                        Audio.play(walrusfx, 0.7);
+                        Audio.play(walrusfx, 0.6);
                     } else if (gob.type == Gob.Type.SEAL && gob.knocked == Boolean.FALSE) {
                         sgobs.add(gob.id);
-                        Audio.play(sealsfx, 0.8);
+                        Audio.play(sealsfx, 0.6);
                     } else if (gob.type == Gob.Type.TROLL && gob.knocked == Boolean.FALSE && Config.alarmtroll) {
                         sgobs.add(gob.id);
                         Audio.play(trollsfx, Config.alarmtrollvol);
                     } else if (gob.type == Gob.Type.MAMMOTH && gob.knocked == Boolean.FALSE) {
                         sgobs.add(gob.id);
-                        Audio.play(mammothsfx, 0.7);
+                        Audio.play(mammothsfx, 0.6);
                     } else if (gob.type == Gob.Type.EAGLE && gob.knocked == Boolean.FALSE) {
                         sgobs.add(gob.id);
                         Audio.play(eaglesfx);
@@ -331,7 +333,7 @@ public class LocalMiniMap extends Widget {
                         Audio.play(doomedsfx, Config.alarmbramvol);
                     } else if (gob.type == Gob.Type.WOLF && gob.knocked == Boolean.FALSE) {
                         sgobs.add(gob.id);
-                        Audio.play(wolfsfx, 0.7);
+                        Audio.play(wolfsfx, 0.6);
                     }
 						*/
                 } catch (Loading l) {

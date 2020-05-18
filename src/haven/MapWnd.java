@@ -122,7 +122,7 @@ public class MapWnd extends Window {
             add(new IButton("gfx/hud/worldmap/minus", "", "", "") {
                 @Override
                 public void click() {
-                    if (MapFileWidget.zoom < 4) {
+                    if (MapFileWidget.zoom < 4 && view.curloc != null) {
                         zoomtex = null;
                         Coord tc = view.curloc.tc.mul(MapFileWidget.scalef());
                         MapFileWidget.zoom++;
@@ -135,7 +135,7 @@ public class MapWnd extends Window {
             add(new IButton("gfx/hud/worldmap/plus", "", "", "") {
                 @Override
                 public void click() {
-                    if (MapFileWidget.zoom > 0) {
+                    if (MapFileWidget.zoom > 0 && view.curloc != null) {
                         zoomtex = null;
                         Coord tc = view.curloc.tc.mul(MapFileWidget.scalef());
                         MapFileWidget.zoom--;

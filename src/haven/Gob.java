@@ -460,7 +460,7 @@ public class Gob implements Sprite.Owner, Skeleton.ModOwner, Rendered {
             type = Type.TREE;
         else if (name.endsWith("oldtrunk"))
             type = Type.OLDTRUNK;
-        else if (name.endsWith("terobjs/plants/carrot") || name.endsWith("terobjs/plants/hemp"))
+        else if (name.endsWith("terobjs/plants/carrot") || name.endsWith("terobjs/plants/hemp") || name.endsWith("terobjs/plants/turnip"))
             type = Type.MULTISTAGE_PLANT;
         else if (name.endsWith("/fallowplant"))
             type = Type.PLANT_FALLOW;

@@ -1,3 +1,21 @@
+Version 1.79.0
+    New:
+        * Option to smooth out snow patches from the minimap (by lcy03406).
+
+    Fixed:
+        * Harvestable stage indicator for turnips.
+
+    Misc:
+        * Update ru l18n (by supremko).
+        * Add Precious Snowflake, Coltsfoot, Frogspawn to icons list.
+        * Reduce animal alarm volume.
+        * Upstream code merge.
+
+Version 1.78.2
+    Fixed:
+        * Discovered tiles being overwritten by winter tiles.
+        * Marker upload issues (by andyleap).
+
 Version 1.78.1
     Fixed:
         * Number of issues in mapping service (by andyleap).

@@ -10,3 +10,7 @@ amber-*.zip
 /bin
 /.settings
 /doc/javadoc
+.devcontainer/
+workspace.code-workspace
+food_data.json
+mapdata_index_global

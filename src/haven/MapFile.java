@@ -891,6 +891,11 @@ public class MapFile {
                 Grid cur = seg.loaded(g.id);
                 if (!((cur != null) && (cur.useq == g.seq))) {
                     Grid sg = Grid.from(map, g);
+                    Grid prev = cur;
+                    if(prev == null)
+                        prev = Grid.load(MapFile.this, sg.id);
+                    if(prev != null)
+                        sg = sg.mergeprev(prev);
                     sg.save(MapFile.this);
                 }
                 if (seg.id != mseg) {

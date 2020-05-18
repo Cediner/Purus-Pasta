@@ -300,6 +300,17 @@ public class OptWnd extends Window {
                         a = val;
                     }
                 });
+                appender.add(new CheckBox("smooth snow in minimap") {
+                    {
+                        a = Config.minimapsmooth;
+                    }
+
+                    public void set(boolean val) {
+                        Utils.setprefb("minimapsmooth", val);
+                        Config.minimapsmooth = val;
+                        a = val;
+                    }
+                });
                 appender.add(new CheckBox("Show FPS") {
                     {
                         a = Config.showfps;

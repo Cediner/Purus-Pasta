@@ -128,6 +128,7 @@ public class MCache {
         private final Cut cuts[];
         private Collection<Gob>[] fo = null;
         public Navigation.GridType gridType = Navigation.GridType.UNKNOWN;
+        private int snowTileId = -1;
 
         private class Cut {
             MapMesh mesh;
@@ -185,6 +186,54 @@ public class MCache {
 
         public int getol(Coord tc) {
             return (ol[tc.x + (tc.y * cmaps.x)]);
+        }
+
+        public int gettilenosnow(Coord tc) {
+            int i = tc.x + (tc.y * cmaps.x);
+            int t = tiles[i];
+            if (t != snowTileId)
+                return t;
+            if (tc.x > 0) {
+                t = tiles[i-1];
+                if (t != snowTileId)
+                    return t;
+            }
+            if (tc.x < cmaps.x-1) {
+                t = tiles[i+1];
+                if (t != snowTileId)
+                    return t;
+            }
+            if (tc.y > 0) {
+                t = tiles[i-cmaps.x];
+                if (t != snowTileId)
+                    return t;
+            }
+            if (tc.y < cmaps.y-1) {
+                t = tiles[i+cmaps.x];
+                if (t != snowTileId)
+                    return t;
+            }
+            if (tc.x > 0 && tc.y > 0) {
+                t = tiles[i-1-cmaps.x];
+                if (t != snowTileId)
+                    return t;
+            }
+            if (tc.x < cmaps.x-1 && tc.y > 0) {
+                t = tiles[i+1-cmaps.x];
+                if (t != snowTileId)
+                    return t;
+            }
+            if (tc.x > 0 && tc.y < cmaps.y-1) {
+                t = tiles[i-1+cmaps.x];
+                if (t != snowTileId)
+                    return t;
+            }
+            if (tc.x < cmaps.x-1 && tc.y < cmaps.y-1) {
+                t = tiles[i+1+cmaps.x];
+                if (t != snowTileId)
+                    return t;
+            }
+            return snowTileId;
         }
 
         private void makeflavor() {
@@ -373,6 +422,9 @@ public class MCache {
                 if (resnm.equals("gfx/tiles/nil")) {
                     nilTileId = tileid;
                 }
+                if (resnm.equals("gfx/tiles/snow")) {
+                    snowTileId  = tileid;
+                }
                 nsets[tileid] = new Resource.Spec(Resource.remote(), resnm, resver);
             }
             int waterTilesCount = 0;
@@ -503,6 +555,11 @@ public class MCache {
     public int gettile(Coord tc) {
         Grid g = getgridt(tc);
         return (g.gettile(tc.sub(g.ul)));
+    }
+
+    public int gettilenosnow(Coord tc) {
+        Grid g = getgridt(tc);
+        return (g.gettilenosnow(tc.sub(g.ul)));
     }
 
     public int getz(Coord tc) {
