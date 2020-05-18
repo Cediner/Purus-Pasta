@@ -71,9 +71,9 @@
   </target>
   
   <target name="res-jar" depends="build-env" unless="has-res-jar">
-    <get src="http://game.havenandhearth.com/java/builtin-res.jar" dest="lib/builtin-res.jar"
+    <get src="http://game.havenandhearth.com/java/old-builtin-res.jar" dest="lib/builtin-res.jar"
 	 usetimestamp="true" />
-    <get src="http://game.havenandhearth.com/java/hafen-res.jar" dest="lib/hafen-res.jar"
+    <get src="http://game.havenandhearth.com/java/old-hafen-res.jar" dest="lib/hafen-res.jar"
 	 usetimestamp="true" />
   </target>
 
