@@ -99,7 +99,6 @@
     <mkdir dir="build/scripts"/>
   	<copy todir="build/scripts">
 		<fileset dir="scripts/" includes="*"></fileset>
-		<fileset dir="scripts2/" includes="*"></fileset>
   	</copy>
   </target>
   <target name="alarms" depends="build-env">
@@ -148,7 +147,7 @@
   <target name="deftgt" depends="jars" />
 
   <target name="run" depends="jars">
-    <java jar="build/hafen.jar" fork="true" />
+    <java dir="build" jar="build/hafen.jar" args="-U https://game.havenandhearth.com/hres/ game.havenandhearth.com" fork="true" />
   </target>
   
   <target name="clean">

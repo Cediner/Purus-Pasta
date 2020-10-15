@@ -425,6 +425,7 @@ public class Widget {
                     } else {
                         throw(new RuntimeException("Invalid division operands: " + a + " - " + b));
                     }
+                } else if(op == 'S') {
                 } else if(Character.isWhitespace(op)) {
                 } else {
                     throw(new RuntimeException("Unknown position operation: " + op));
