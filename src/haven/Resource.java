@@ -63,6 +63,8 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -949,16 +951,49 @@ public class Resource implements Serializable {
         public T layerid();
     }
 
+    public static class ImageReadException extends IOException {
+        public final String[] supported = ImageIO.getReaderMIMETypes();
+
+        public ImageReadException() {
+            super("Could not decode image data");
+        }
+    }
+
+    public static BufferedImage readimage(InputStream fp) throws IOException {
+        try {
+            /* This can crash if not privileged due to ImageIO
+             * creating tempfiles without doing that privileged
+             * itself. It can very much be argued that this is a bug
+             * in ImageIO. */
+            return (AccessController.doPrivileged(new PrivilegedExceptionAction<BufferedImage>() {
+                public BufferedImage run() throws IOException {
+                    BufferedImage ret;
+                    ret = ImageIO.read(fp);
+                    if (ret == null)
+                        throw (new ImageReadException());
+                    return (ret);
+                }
+            }));
+        } catch (PrivilegedActionException e) {
+            Throwable c = e.getCause();
+            if (c instanceof IOException)
+                throw ((IOException) c);
+            throw (new AssertionError(c));
+        }
+    }
+
     @LayerName("image")
     public class Image extends Layer implements Comparable<Image>, IDLayer<Integer> {
         public transient BufferedImage img;
+        private transient BufferedImage scaled;
         transient private Tex tex;
         public final int z, subz;
         public final boolean nooff;
         public final int id;
+        public final Map<String, byte[]> kvdata;
+        private float scale = 1;
         private int gay = -1;
-        public Coord sz;
-        public Coord o;
+        public Coord sz, o, tsz, ssz;
 
         public Image(Message buf) {
             z = buf.int16();
@@ -968,14 +1003,52 @@ public class Resource implements Serializable {
             nooff = (fl & 2) != 0;
             id = buf.int16();
             o = cdec(buf);
+            Map<String, byte[]> kvdata = new HashMap<>();
+            if ((fl & 4) != 0) {
+                while (true) {
+                    String key = buf.string();
+                    if (key.equals(""))
+                        break;
+                    int len = buf.uint8();
+                    if ((len & 0x80) != 0)
+                        len = buf.int32();
+                    byte[] data = buf.bytes(len);
+                    Message val = new MessageBuf(data);
+                    if (key.equals("tsz")) {
+                        tsz = val.coord();
+                    } else if (key.equals("scale")) {
+                        scale = val.float32();
+                    } else {
+                        kvdata.put(key, data);
+                    }
+                }
+            }
+            this.kvdata = kvdata.isEmpty() ? Collections.emptyMap() : kvdata;
             try {
-                img = ImageIO.read(new MessageInputStream(buf));
+                img = readimage(new MessageInputStream(buf));
             } catch (IOException e) {
                 throw (new LoadException(e, Resource.this));
             }
             if (img == null)
                 throw (new LoadException("Invalid image data in " + name, Resource.this));
             sz = Utils.imgsz(img);
+            if (tsz == null)
+                tsz = sz;
+            ssz = new Coord(Math.round(UI.scale(sz.x / scale)), Math.round(UI.scale(sz.y / scale)));
+            if (scale != 1) {
+                img = scaled();
+                sz = ssz;
+            }
+        }
+
+        public BufferedImage scaled() {
+            if (scaled == null) {
+                synchronized (this) {
+                    if (scaled == null)
+                        scaled = PUtils.uiscale(img, ssz);
+                }
+            }
+            return (scaled);
         }
 
         public synchronized Tex tex() {

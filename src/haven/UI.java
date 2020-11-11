@@ -26,6 +26,7 @@
 
 package haven;
 
+import java.awt.Font;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -56,6 +57,7 @@ public class UI {
     public final ActAudio audio = new ActAudio();
     public int beltWndId = -1;
 	public GameUI gui;
+    private static final double scalef = 1.0;
 
     {
         lastevent = lasttick = Utils.rtime();
@@ -495,5 +497,57 @@ public class UI {
 
     public void destroy() {
         audio.clear();
+    }
+
+    public static double scale(double v) {
+        return (v * scalef);
+    }
+
+    public static float scale(float v) {
+        return (v * (float) scalef);
+    }
+
+    public static int scale(int v) {
+        return (Math.round(scale((float) v)));
+    }
+
+    public static Coord scale(Coord v) {
+        return (v.mul(scalef));
+    }
+
+    public static Coord scale(int x, int y) {
+        return (scale(new Coord(x, y)));
+    }
+
+    public static Coord2d scale(Coord2d v) {
+        return (v.mul(scalef));
+    }
+
+    static public Font scale(Font f, float size) {
+        return (f.deriveFont(scale(size)));
+    }
+
+//    public static <T extends Tex> ScaledTex<T> scale(T tex) {
+//        return (new ScaledTex<T>(tex, UI.scale(tex.sz())));
+//    }
+
+//    public static <T extends Tex> ScaledTex<T> scale(ScaledTex<T> tex) {
+//        return (tex);
+//    }
+
+    public static double unscale(double v) {
+        return (v / scalef);
+    }
+
+    public static float unscale(float v) {
+        return (v / (float) scalef);
+    }
+
+    public static int unscale(int v) {
+        return (Math.round(unscale((float) v)));
+    }
+
+    public static Coord unscale(Coord v) {
+        return (v.div(scalef));
     }
 }
