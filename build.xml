@@ -84,13 +84,17 @@
   </target>
 	
 	<target name="custom-encode" depends="build-env">
-		<mkdir dir ="build/custom-res"/>
+		<mkdir dir ="custom_res"/>
 		<java jar="lib/LayerUtil.jar" fork="true">
-			<arg line="-re custom-res build/custom-res"/>
+			<arg line="-re custom-res custom_res"/>
 		</java>
 	</target>
 	
 	<target name="custom-jar" depends="custom-encode">
+        <mkdir dir ="build/custom-res"/>
+        <copy todir="build/custom-res">
+            <fileset dir="custom_res" includes="**"/>
+        </copy>
 		<jar basedir="build/custom-res" destfile="build/lib/pasta-res.jar"/>
 		<delete dir="build/custom-res"/>
 	</target>
@@ -98,7 +102,7 @@
   <target name="scripts" depends="build-env">
     <mkdir dir="build/scripts"/>
   	<copy todir="build/scripts">
-		<fileset dir="scripts/" includes="*"></fileset>
+		<fileset dir="scripts/" includes="*"/>
   	</copy>
   </target>
   <target name="alarms" depends="build-env">

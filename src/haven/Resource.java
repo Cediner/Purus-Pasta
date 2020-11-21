@@ -984,9 +984,9 @@ public class Resource implements Serializable {
 
     @LayerName("image")
     public class Image extends Layer implements Comparable<Image>, IDLayer<Integer> {
-        public transient BufferedImage img;
+        public transient BufferedImage img, rawimage;
         private transient BufferedImage scaled;
-        transient private Tex tex;
+        transient private Tex tex, rawtex;
         public final int z, subz;
         public final boolean nooff;
         public final int id;
@@ -1026,6 +1026,7 @@ public class Resource implements Serializable {
             this.kvdata = kvdata.isEmpty() ? Collections.emptyMap() : kvdata;
             try {
                 img = readimage(new MessageInputStream(buf));
+                rawimage = img;
             } catch (IOException e) {
                 throw (new LoadException(e, Resource.this));
             }
@@ -1049,6 +1050,21 @@ public class Resource implements Serializable {
                 }
             }
             return (scaled);
+        }
+
+        public Tex rawtex() {
+            if (rawtex == null) {
+                synchronized (this) {
+                    if (rawtex == null) {
+                        rawtex = new TexI(rawimage) {
+                            public String toString() {
+                                return ("TexI(" + Resource.this.name + ", " + id + ")");
+                            }
+                        };
+                    }
+                }
+            }
+            return (rawtex);
         }
 
         public synchronized Tex tex() {
